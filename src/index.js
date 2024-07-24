@@ -1,16 +1,11 @@
+
+
+/*
 // require('dotenv').config({path:'./env'});
 
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import dbConnect from './db/index.js';
 // import  {DB_NAME} from "./constant"
 // import express from 'express';
 //const app=express();
-dotenv.config({
-    path: './env'
-})
-
-/*
 
 first approch
 ;(async ()=>{
@@ -30,5 +25,29 @@ first approch
 
     }
 })()*/
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import dbConnect from './db/index.js';
 
-dbConnect()
+import app from './app.js';
+dotenv.config({
+    path: './env'
+})
+
+
+
+dbConnect().
+then(
+    ()=>{
+        app.listen(process.env.PORT,()=>{
+            console.log(` server is running on the port number : ${process.env.PORT}`)
+        });
+        app.on("Error",(error)=>{
+            console.error("Connection error",error)
+            throw error;
+        });
+    }
+)
+.catch((error)=>{
+    console.log("mongo db connection failed ", error)
+})
